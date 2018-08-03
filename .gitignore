@@ -1,0 +1,10 @@
+# JetBrains Idea / PyCharm files
+.idea
+
+#ipython notebook checkpoints
+.ipynb_checkpoints
+
+# Python compiled files
+*.pyc
+*.pyo
+
