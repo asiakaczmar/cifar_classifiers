@@ -1,27 +1,42 @@
 from matplotlib import pyplot as plt
 import numpy as np
 from keras import backend as K
-from settings import N_IMAGES_TO_SHOW, CLASSES_NO
+from time import sleep
 
+def get_conv_layer_names(model):
+    """
+    Get conv layer names from a model alongside with an index
+    """
+    return ['[' + str(e) + ']' + layer.name
+            for e, layer in enumerate(model.layers)
+            if 'conv' in layer.name]
 
 def remove_axes(fig):
+    """
+    For displaying images. Remove axes from all images in figure.
+    """
     for ax in fig.axes:
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
 
-
-def plot_images(images, size, columns, rows):
+def plot_images(images, size, columns, rows, row_names=None, label_size=10):
     fig = plt.figure(figsize=size)
     for x, i in zip(range(1, columns * rows + 1), images):
         fig.add_subplot(rows, columns, x)
         plt.imshow(i)
     remove_axes(fig)
+    if row_names:
+        axes = fig.axes
+        for ax, row_name in zip(axes[0:-1:columns], row_names):
+            ax.set_ylabel(row_name, size=label_size)
+            ax.get_yaxis().set_ticks([])
+            ax.get_yaxis().set_visible(True)
     plt.show()
 
 
 # dimensions of the generated pictures for each filter.
-img_width = 32
-img_height = 32
+img_width = 48
+img_height = 48
 
 # util function to convert a tensor into a valid image
 
@@ -49,7 +64,7 @@ def normalize(x):
 
 def get_filters(model):
     """
-    This code comes almost entirely from keral tutorial page.
+    This code comes almost entirely from keras tutorial page.
     :param model: pretrained model, that filters we'd like to visualise.
     :return:
     """
@@ -59,6 +74,10 @@ def get_filters(model):
     for layer_name in layer_dict.keys():
         if 'conv' not in layer_name:
             continue
+        print('computing filter visualisations for layer {}'.format(layer_name))
+        #just for a nice display in ipynb.
+        # Should be deleted if better performance is needed
+        sleep(0.2)
         layer_filters = []
         for filter_index in range(15):
             layer_output = layer_dict[layer_name].output
