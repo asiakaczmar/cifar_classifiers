@@ -83,7 +83,6 @@ def hyperparams_search_deep(model, images, labels, params_values):
     Perform hyperparam search using gridsearch. Not very efficient.
     """
     param_names, vals_to_test = zip(*params_values.items())
-    images = preprocess_images(images)
     train_images, val_images, train_labels, val_labels = train_test_split(images, labels, test_size=0.2)
     best_val_score = 0
     best_params = None
